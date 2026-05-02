@@ -6,7 +6,19 @@
 import os
 import time
 from pyrogram import Client, filters
-from config import *
+from config import (
+    API_ID,
+    API_HASH,
+    BOT_TOKEN,
+    OWNER_ID,
+    MONGO_URI,
+    LOG_CHANNEL,
+    UPDATE_CHANNEL
+)
+
+print("LOG_CHANNEL:", LOG_CHANNEL)
+print("UPDATE_CHANNEL:", UPDATE_CHANNEL)
+
 from database import *
 from utils import progress_bar
 from ffmpeg_utils import add_metadata
