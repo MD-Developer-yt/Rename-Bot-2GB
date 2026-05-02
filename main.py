@@ -178,7 +178,7 @@ async def rename(_, msg):
 
     status = await msg.reply("Downloading...")
 
-    file_path = await msg.download()
+    file_path = await msg.download(file_name=file.file_name)
 
     output = f"temp_{new_name}"
 
