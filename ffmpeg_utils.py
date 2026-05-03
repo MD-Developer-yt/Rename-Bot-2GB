@@ -1,15 +1,14 @@
+# ------------------------- #
+# Don't Remove Credit 
+# Ask Doubt @AU_Bot_Discussion 
+# Owner @Mr_Mohammed_29 
+# ------------------------- #
 import ffmpeg
 import os
 
 def add_metadata(input_path, output_path, title="", author="", artist="", audio="", subtitle="", video=""):
     try:
         stream = ffmpeg.input(input_path)
-
-        cmd = ffmpeg.output(
-            stream,
-            output_path,
-            codec="copy"
-        )
 
         metadata_args = []
 
@@ -26,9 +25,16 @@ def add_metadata(input_path, output_path, title="", author="", artist="", audio=
         if video:
             metadata_args += ["-metadata", f"description={video}"]
 
-        cmd = cmd.global_args(*metadata_args)
+        stream = ffmpeg.output(
+            stream,
+            output_path,
+            vcodec="copy",
+            acodec="copy"
+        )
 
-        cmd.run(overwrite_output=True)
+        stream = stream.global_args(*metadata_args)
+
+        ffmpeg.run(stream, overwrite_output=True, quiet=True)
 
         return output_path
 
@@ -40,4 +46,3 @@ def add_metadata(input_path, output_path, title="", author="", artist="", audio=
 # Don't Remove Credit 
 # Ask Doubt @AU_Bot_Discussion 
 # Owner @Mr_Mohammed_29 
-# ------------------------- #
