@@ -93,7 +93,12 @@ bot = Client(
 @bot.on_message(filters.command("start"))
 async def start(_, message):
 
-    user = message.from_user
+        if await is_banned(message.from_user.id):
+            return await message.reply("🚫 You are banned from using this bot.")
+
+        await add_user(message.from_user.id)
+    
+        user = message.from_user
 
     try:
         m = await message.reply_text("Jɪɴᴡᴏᴏ Sᴜɴɢ . .")
@@ -137,6 +142,10 @@ async def start(_, message):
 # ---------------- CAPTION ----------------
 @bot.on_message(filters.command("set_caption"))
 async def set_caption(_, msg):
+
+    if await is_banned(msg.from_user.id):
+        return await msg.reply("🚫 You are banned from using this bot.")
+        
     cap = msg.text.split(None, 1)[1]
     await set_user(msg.from_user.id, {"caption": cap})
     await msg.reply("Caption set")
