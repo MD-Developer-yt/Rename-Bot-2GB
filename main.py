@@ -474,7 +474,7 @@ async def setvideo(_, msg):
 @bot.on_message(filters.photo)
 async def save_thumb(_, msg):
     await set_user(msg.from_user.id, {"thumb": msg.photo.file_id})
-    await msg.reply("Thumbnail saved ✔")
+    await msg.reply("✅️ Tʜᴜᴍʙɴᴀɪʟ Sᴀᴠᴇᴅ")
 
 
 @bot.on_message(filters.command("view_thumb"))
@@ -483,31 +483,31 @@ async def view_thumb(_, msg):
     if user.get("thumb"):
         await msg.reply_photo(user["thumb"])
     else:
-        await msg.reply("No thumbnail found")
+        await msg.reply("😔 Yᴏᴜ Dᴏɴ'ᴛ Hᴀᴠᴇ Aɴy Tʜᴜᴍʙɴᴀɪʟ")
 
 
 @bot.on_message(filters.command("del_thumb"))
 async def del_thumb(_, msg):
     await set_user(msg.from_user.id, {"thumb": ""})
-    await msg.reply("Thumbnail deleted ✔")
+    await msg.reply("❌️ Tʜᴜᴍʙɴᴀɪʟ Dᴇʟᴇᴛᴇᴅ")
 
 # ---------------- FILE / VIDEO CHOOSER ----------------
 @bot.on_message(filters.document | filters.video)
 async def choose(_, msg):
 
     if await is_banned(msg.from_user.id):
-        return await msg.reply("🚫 You are banned from using this bot.")
+        return await msg.reply("🚫 Yᴏᴜ Aʀᴇ Bᴀɴɴᴇᴅ.")
         
     user_files[msg.from_user.id] = msg
     
     buttons = InlineKeyboardMarkup([
         [
-            InlineKeyboardButton("📄 File Mode", callback_data="file"),
-            InlineKeyboardButton("🎬 Video Mode", callback_data="video")
+            InlineKeyboardButton("📄 𝗗𝗼𝗰𝘂𝗺𝗲𝗻𝘁", callback_data="file"),
+            InlineKeyboardButton("🎬 𝗩𝗶𝗱𝗲𝗼 𝗠𝗼𝗱𝗲", callback_data="video")
         ]
     ])
 
-    await msg.reply("Choose mode:", reply_markup=buttons)
+    await msg.reply("𝗦𝗲𝗹𝗲𝗰𝘁 𝗧𝗵𝗲 𝗢𝘂𝘁𝗽𝘂𝘁 𝗙𝗶𝗹𝗲 𝗧𝘆𝗽𝗲:", reply_markup=buttons)
 
 # ---------------- ADMIN ----------------
 def admin(uid):
@@ -520,7 +520,7 @@ async def addprem(_, msg):
         return
 
     if len(msg.command) < 3:
-        return await msg.reply("Usage: /addpremium user_id duration (1hr, 7d, 30d, 1y)")
+        return await msg.reply("𝗿𝗲𝗽𝗹𝘆 𝘄𝗶𝘁𝗵 /addpremium 𝘂𝘀𝗲𝗿 𝗶𝗱 𝗱𝘂𝗿𝗮𝘁𝗶𝗼𝗻 (𝟭𝗵𝗿, 𝟳𝗱, 𝟯𝟬𝗱, 𝟭𝘆𝗿)")
 
     uid = int(msg.text.split()[1])
     duration = msg.text.split()[2]
@@ -528,7 +528,7 @@ async def addprem(_, msg):
     seconds = parse_duration(duration)
 
     if not seconds:
-        return await msg.reply("Invalid format ❌ Use: 1hr / 7d / 30d / 1y")
+        return await msg.reply("𝗜𝗻𝘃𝗮𝗹𝗶𝗱 𝗙𝗼𝗿𝗺𝗮𝘁 ❌ 𝗨𝘀𝗲 : 1hr / 7d / 30d / 1y")
 
     expiry = int(time.time()) + seconds
 
@@ -540,11 +540,11 @@ async def addprem(_, msg):
     await msg.reply(f"""
 🎉 𝗬𝗼𝘂 𝗮𝗿𝗲 𝗻𝗼𝘄 𝗮 𝗣𝗿𝗲𝗺𝗶𝘂𝗺 𝗨𝘀𝗲𝗿!
 
-👤 User ID: {uid}
-⏳ Duration: {duration}
-🕒 Expires In: {duration}
+👤 Usᴇʀ ID: {uid}
+⏳ Dᴜʀᴀᴛɪᴏɴ: {duration}
+🕒 Exᴘɪʀᴇs Iɴ: {duration}
 
-✨ Status: Premium Activated ✔
+✨ Sᴛᴀᴛᴜs: 𝗣𝗿𝗲𝗺𝗶𝘂𝗺 𝗔𝗰𝘁𝗶𝘃𝗮𝘁𝗲𝗱 ✅️
 """)
 
 @bot.on_message(filters.command("remove_premium"))
@@ -553,7 +553,7 @@ async def remprem(_, msg):
         return
     uid = int(msg.text.split()[1])
     await set_user(uid, {"premium": False})
-    await msg.reply("Removed")
+    await msg.reply("𝗣𝗿𝗲𝗺𝗶𝘂𝗺 𝗥𝗲𝗺𝗼𝘃𝗲𝗱")
 
 @bot.on_message(filters.command("status"))
 async def status(_, msg):
@@ -576,7 +576,7 @@ async def status(_, msg):
 """
 
     buttons = InlineKeyboardMarkup([
-        [InlineKeyboardButton("🔄 Refresh", callback_data="status_refresh")]
+        [InlineKeyboardButton("🔄 Rᴇғʀᴇsʜ", callback_data="status_refresh")]
     ])
 
     await msg.reply_text(text, reply_markup=buttons)
@@ -591,7 +591,7 @@ async def ban(_, msg):
         return
     uid = int(msg.text.split()[1])
     await set_user(uid, {"banned": True})
-    await msg.reply("User banned")
+    await msg.reply("‼️ 𝗨𝘀𝗲𝗿 𝗜𝘀 𝗕𝗮𝗻𝗻𝗲𝗱")
 
 @bot.on_message(filters.command("unban"))
 async def unban(_, msg):
@@ -599,7 +599,7 @@ async def unban(_, msg):
         return
     uid = int(msg.text.split()[1])
     await set_user(uid, {"banned": False})
-    await msg.reply("User unbanned")
+    await msg.reply("😁 𝗨𝘀𝗲𝗿 𝗜𝘀 𝗨𝗻𝗯𝗮𝗻𝗻𝗲𝗱")
 
 # ------------LOGS------------- #
 @bot.on_message(filters.command("logs"))
