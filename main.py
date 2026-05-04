@@ -848,13 +848,13 @@ async def cb(_, query: CallbackQuery):
                 bar = "⬢" * filled + "⬡" * (10 - filled)
 
                 text = f"""{bar}
- 📥 Dᴏᴡɴʟᴏᴀᴅɪɴɢ...
+           📥 Dᴏᴡɴʟᴏᴀᴅɪɴɢ...
 
-<b>» 𝗗𝗼𝗻𝗲</b> : {round(percent, 2)}%
-<b>» 𝗦𝗶𝘇𝗲</b> : {humanbytes(current)} | {humanbytes(total)}
-<b>» 𝗦𝗽𝗲𝗲𝗱</b> : {humanbytes(speed)}/s
-<b>» 𝗘𝗧𝗔</b> : {time_formatter(eta)}
-"""
+           <b>» 𝗗𝗼𝗻𝗲</b> : {round(percent, 2)}%
+           <b>» 𝗦𝗶𝘇𝗲</b> : {humanbytes(current)} | {humanbytes(total)}
+           <b>» 𝗦𝗽𝗲𝗲𝗱</b> : {humanbytes(speed)}/s
+           <b>» 𝗘𝗧𝗔</b> : {time_formatter(eta)}
+           """
 
                 await query.message.edit_text(text)
 
@@ -892,7 +892,7 @@ async def cb(_, query: CallbackQuery):
         # -------- THUMB FIX -------- #
             thumb_path = None
             try:
-                thumb_path = await get_thumbnail(
+                thumb_path = get_thumbnail(
                     bot,
                     thumb,
                     is_video,
