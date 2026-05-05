@@ -681,7 +681,7 @@ async def broadcast(_, msg):
         return
 
     if len(msg.command) < 2:
-        return await msg.reply("type with /broadcast message")
+        return await msg.reply("𝗍𝗒𝗉𝖾 𝗐𝗂𝗍𝗁 /broadcast 𝗆𝖾𝗌𝗌𝖺𝗀𝖾")
 
     text = msg.text.split(None, 1)[1]
 
@@ -689,7 +689,7 @@ async def broadcast(_, msg):
     success = 0
     failed = 0
 
-    await msg.reply("📢 Broadcast started...")
+    await msg.reply("⏳️ 𝖡𝗋𝗈𝖺𝖽𝖼𝖺𝗌𝗍 𝖲𝗍𝖺𝗋𝗍𝖾𝖽.....")
 
     try:
         users_list = await get_all_users()   
@@ -703,14 +703,14 @@ async def broadcast(_, msg):
                 failed += 1
 
         await msg.reply(
-            f"✅ Broadcast Completed\n\n"
-            f"Total: {total}\n"
-            f"Success: {success}\n"
-            f"Failed: {failed}"
+            f"✅ 𝗕𝗿𝗼𝗮𝗱𝗰𝗮𝘀𝘁 𝗖𝗼𝗺𝗽𝗹𝗲𝘁𝗲𝗱\n\n"
+            f"◇ Tᴏᴛᴀʟ Usᴇʀs: {total}\n"
+            f"◇ Sᴜᴄᴄᴇssғᴜʟ: {success}\n"
+            f"◇ Uɴsᴜᴄᴄᴇssғᴜʟ: {failed}"
         )
 
     except Exception as e:
-        await msg.reply(f"❌ Broadcast Error: {e}")
+        await msg.reply(f"❌ 𝗕𝗿𝗼𝗮𝗱𝗰𝗮𝘀𝘁 𝗘𝗿𝗿𝗼𝗿: {e}")
 # ---------- Callback --------------- #
 @bot.on_callback_query()
 async def cb(_, query: CallbackQuery):
@@ -952,7 +952,7 @@ async def cb(_, query: CallbackQuery):
                 user.get("video", "")
             )
             
-            if not os.path.exists(final):
+            if not os.path.exists(final) or os.path.getsize(final) < 100000:
                 final = file_path
 
             thumb = user.get("thumb")
