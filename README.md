@@ -13,6 +13,8 @@ BOT_TOKEN=123456:ABCDEF
 
 OWNER_ID=123456789
 
+BOT_USERNAME= Jinwoo_Rename_bot (without @)
+
 MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/?retryWrites=true&w=majority
 
 LOG_CHANNEL=-100xxxxxxxxxx
