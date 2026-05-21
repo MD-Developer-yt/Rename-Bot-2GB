@@ -1,3 +1,9 @@
+# ------------------------- #
+# Don't Remove Credit 
+# Ask Doubt @AU_Bot_Discussion 
+# Owner @Mr_Mohammed_29 
+# ------------------------- #
+
 import os
 
 # ---------------- BOT CORE ----------------
@@ -26,3 +32,9 @@ else:
 
 # Log channel for bot activities (uploads, errors, users)
 LOG_CHANNEL = os.getenv("LOG_CHANNEL")  # example: -100xxxxxxxxxx
+
+# ------------------------- #
+# Don't Remove Credit 
+# Ask Doubt @AU_Bot_Discussion 
+# Owner @Mr_Mohammed_29 
+# ------------------------- #
