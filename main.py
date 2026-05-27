@@ -735,22 +735,22 @@ async def see_metadata(_, msg):
 
 ━━━━━━━━━━━━━━━
 
-🎬 Title:
+🎬 Tɪᴛʟᴇ:
 `{title}`
 
-👤 Author:
+👤 Aᴜᴛʜᴏʀ:
 `{author}`
 
-🎨 Artist:
+🎨 Aʀᴛɪsᴛ:
 `{artist}`
 
-🎵 Audio:
+🎵 Aᴜᴅɪᴏ:
 `{audio}`
 
-💬 Subtitle:
+💬 Sᴜʙᴛɪᴛʟᴇ:
 `{subtitle}`
 
-📹 Video:
+📹 Vɪᴅᴇᴏ:
 `{video}`
 
 ━━━━━━━━━━━━━━━
@@ -779,7 +779,7 @@ async def set_dump(_, msg):
     dump_channels[msg.from_user.id] = channel_id
 
     await msg.reply(
-        f"✅ Dump Channel Saved\n\nID: `{channel_id}`"
+        f"✅ 𝗗𝘂𝗺𝗽 𝗖𝗵𝗮𝗻𝗻𝗲𝗹 𝗔𝗱𝗱𝗲𝗱\n\nID: `{channel_id}`"
     )
 
 @bot.on_message(filters.command("chkdump"))
@@ -788,10 +788,10 @@ async def chk_dump(_, msg):
     channel_id = dump_channels.get(msg.from_user.id)
 
     if not channel_id:
-        return await msg.reply("❌ No Dump Channel Added")
+        return await msg.reply("‼️ 𝗡𝗼 𝗗𝘂𝗺𝗽 𝗖𝗵𝗮𝗻𝗻𝗲𝗹 𝗔𝗱𝗱𝗲𝗱")
 
     await msg.reply(
-        f"📦 Current Dump Channel:\n`{channel_id}`"
+        f"📦 𝗖𝘂𝗿𝗿𝗲𝗻𝘁 𝗗𝘂𝗺𝗽 𝗖𝗵𝗮𝗻𝗻𝗲𝗹:\n`{channel_id}`"
     )
 
 @bot.on_message(filters.command("deldump"))
@@ -800,7 +800,7 @@ async def del_dump(_, msg):
     if msg.from_user.id in dump_channels:
         del dump_channels[msg.from_user.id]
 
-    await msg.reply("✅ Dump Channel Deleted")
+    await msg.reply("✅ 𝗗𝘂𝗺𝗽 𝗖𝗵𝗮𝗻𝗻𝗲𝗹 𝗗𝗲𝗹𝗲𝘁𝗲𝗱")
 
 # ---------------- UPLOAD SYSTEM ---------------- #
 
@@ -817,60 +817,60 @@ async def upload_settings(_, msg):
     selected_bot = upload_bots.get(user_id)
 
     if selected_bot:
-        selected_text = "Token Set ✅"
+        selected_text = "𝗧𝗼𝗸𝗲𝗻 𝗦𝗲𝘁 ✅"
     else:
-        selected_text = "Not Set ❌"
+        selected_text = "𝗡𝗼𝘁 𝗦𝗲𝘁 ❌"
 
     dump_id = dump_channels.get(user_id, "Not set")
 
     text = f"""
 Cʜᴏᴏsᴇ ᴡʜɪᴄʜ ʙᴏᴛ sʜᴏᴜʟᴅ ᴜᴘʟᴏᴀᴅ ᴛʜᴇ ғɪɴɪsʜᴇᴅ ғɪʟᴇ
 
-Modes:
-• Main: All Renamed File upload via This Bot
-• Personal: select your personal Upload bot for uploading files
+𝖬𝗈𝖽𝖾𝗌:
+• 𝖬𝖺𝗂𝗇: Aʟʟ Rᴇɴᴀᴍᴇᴅ Fɪʟᴇ ᴜᴘʟᴏᴀᴅ ᴠɪᴀ Tʜɪs Bᴏᴛ
+• 𝖯𝖾𝗋𝗌𝗈𝗇𝖺𝗅: sᴇʟᴇᴄᴛ ʏᴏᴜʀ ᴘᴇʀsᴏɴᴀʟ Uᴘʟᴏᴀᴅ ʙᴏᴛ ғᴏʀ ᴜᴘʟᴏᴀᴅɪɴɢ ғɪʟᴇs
 
-• Current mode: {mode}
-• Selected Upload: {selected_text}
-• Dump channel: {dump_id}
+• 𝖢𝗎𝗋𝗋𝖾𝗇𝗍 𝖬𝗈𝖽𝖾: {mode}
+• 𝖲𝖾𝗅𝖾𝖼𝗍𝖾𝖽 𝖴𝗉𝗅𝗈𝖺𝖽: {selected_text}
+• 𝖣𝗎𝗆𝗉 𝖢𝗁𝖺𝗇𝗇𝖾𝗅: {dump_id}
 
-Checks:
-Main mode needs main bot access if you use dump so first make the bot admin!
-Personal mode needs both main bot and chosen upload bot as admins in your dump channel
+𝖢𝗁𝖾𝖼𝗄𝗌:
+Mᴀɪɴ ᴍᴏᴅᴇ ɴᴇᴇᴅs ᴍᴀɪɴ ʙᴏᴛ ᴀᴄᴄᴇss ɪғ ʏᴏᴜ ᴜsᴇ ᴅᴜᴍᴘ sᴏ ғɪʀsᴛ ᴍᴀᴋᴇ ᴛʜᴇ ʙᴏᴛ ᴀᴅᴍɪɴ!
+Pᴇʀsᴏɴᴀʟ ᴍᴏᴅᴇ ɴᴇᴇᴅs ʙᴏᴛʜ ᴍᴀɪɴ ʙᴏᴛ ᴀɴᴅ ᴄʜᴏsᴇɴ ᴜᴘʟᴏᴀᴅ ʙᴏᴛ ᴀs ᴀᴅᴍɪɴs ɪɴ ʏᴏᴜʀ ᴅᴜᴍᴘ ᴄʜᴀɴɴᴇʟ
 """
 
     buttons = InlineKeyboardMarkup([
         [
             InlineKeyboardButton(
-                f"MAIN {'✅' if mode == 'MAIN' else ''}",
+                f"𝗠𝗔𝗜𝗡 {'✅' if mode == 'MAIN' else ''}",
                 callback_data="ub_main"
             ),
 
             InlineKeyboardButton(
-                f"PERSONAL {'✅' if mode == 'PERSONAL' else ''}",
+                f"𝗣𝗘𝗥𝗦𝗢𝗡𝗔𝗟 {'✅' if mode == 'PERSONAL' else ''}",
                 callback_data="ub_personal"
             )
         ],
         [
             InlineKeyboardButton(
-                "UPLOAD BOTS",
+                "𝗨𝗣𝗟𝗢𝗔𝗗 𝗕𝗢𝗧𝗦",
                 callback_data="ub_bots"
             )
         ],
         [
             InlineKeyboardButton(
-                "ADD BOT",
+                "𝗔𝗗𝗗 𝗕𝗢𝗧",
                 callback_data="ub_add"
             ),
 
             InlineKeyboardButton(
-                "DELETE BOT",
+                "𝗗𝗘𝗟𝗘𝗧𝗘 𝗕𝗢𝗧",
                 callback_data="ub_delete"
             )
         ],
         [
             InlineKeyboardButton(
-                "CLOSE",
+                "𝗖𝗟𝗢𝗦𝗘",
                 callback_data="close"
             )
         ]
@@ -899,7 +899,7 @@ async def add_bot(_, msg):
     upload_bots[user_id] = token
 
     await msg.reply(
-        "✅ Personal Upload Bot Saved"
+        "✅️ Pᴇʀsᴏɴᴀʟ Uᴘʟᴏᴀᴅ Bᴏᴛ Sᴀᴠᴇᴅ"
     )
 
 
@@ -914,7 +914,7 @@ async def del_bot(_, msg):
         del upload_bots[user_id]
 
     await msg.reply(
-        "❌ Personal Upload Bot Deleted"
+        "‼️ Pᴇʀsᴏɴᴀʟ Uᴘʟᴏᴀᴅ Bᴏᴛ Dᴇʟᴇᴛᴇᴅ "
     )
 
 # ---------------- THUMB ----------------
@@ -1001,7 +1001,7 @@ async def status(_, msg):
 📊 𝗕𝗼𝘁 𝗦𝘁𝗮𝘁𝘂𝘀
 
 👥 Usᴇʀs: {users_count}
-⏱ Uᴘᴛɪᴍᴇ: {get_uptime()}
+⏱  Uᴘᴛɪᴍᴇ: {get_uptime()}
 ⚡ Pɪɴɢ: {ping}
 🧠 Mᴇᴍᴏʀʏ Usᴀɢᴇ: {get_memory()}
 🧾 Vᴇʀsɪᴏɴ: v3.0
@@ -1036,7 +1036,7 @@ async def stats(_, msg):
 
     start = time.time()
 
-    temp = await msg.reply_text("Calculating ping...")
+    temp = await msg.reply_text("Cᴀʟᴄᴜʟᴀᴛɪɴɢ Pɪɴɢ....")
 
     end = time.time()
 
@@ -1062,7 +1062,7 @@ async def stats(_, msg):
     total_storage = humanbytes(rename_stats["total_size"])
 
     text = f"""
-⌬ BOT STATISTICS :
+⌬ 𝗕𝗢𝗧 𝗦𝗧𝗔𝗧𝗜𝗦𝗧𝗜𝗖𝗦 :
 
 ┎ Bᴏᴛ Uᴘᴛɪᴍᴇ : {get_uptime()}
 ┃ Cᴜʀʀᴇɴᴛ Pɪɴɢ : {ping}ᴍꜱ
@@ -1076,13 +1076,13 @@ async def stats(_, msg):
 
 ┎ DISK :
 ┃ {disk_bar}
-┃ Used : {humanbytes(disk.used)}
-┃ Free : {humanbytes(disk.free)}
-┖ Total : {humanbytes(disk.total)}
+┃ Usᴇᴅ : {humanbytes(disk.used)}
+┃ Fʀᴇᴇ : {humanbytes(disk.free)}
+┖ Tᴏᴛᴀʟ : {humanbytes(disk.total)}
 
-┎ RENAME STATISTICS :
-┃ Total Files Renamed : {total_files:,}
-┖ Total Storage Used : {total_storage}
+┎ 𝗥𝗘𝗡𝗔𝗠𝗘 𝗦𝗧𝗔𝗧𝗜𝗦𝗧𝗜𝗖𝗦 :
+┃ Tᴏᴛᴀʟ Fɪʟᴇs Rᴇɴᴀᴍᴇᴅ : {total_files:,}
+┖ Tᴏᴛᴀʟ Sᴛᴏʀᴀɢᴇ Usᴇᴅ : {total_storage}
 """
 
     await temp.edit_text(text)
@@ -1108,13 +1108,13 @@ async def ban(_, msg):
         uid = int(msg.command[1])
 
     except:
-        return await msg.reply("❌ Invalid User ID")
+        return await msg.reply("‼️ Iɴᴠᴀʟɪᴅ Usᴇʀ ID")
 
     await set_user(uid, {"banned": True})
 
     log_event(f"User banned: {uid}")
 
-    await msg.reply(f"🚫 User `{uid}` banned successfully")
+    await msg.reply(f"🚫 𝗨𝘀𝗲𝗿 `{uid}` 𝗯𝗮𝗻𝗻𝗲𝗱 𝗦𝘂𝗰𝗰𝗲𝘀𝘀𝗳𝘂𝗹𝗹𝘆")
 
 
 @bot.on_message(filters.command("unban"))
@@ -1132,13 +1132,13 @@ async def unban(_, msg):
         uid = int(msg.command[1])
 
     except:
-        return await msg.reply("❌ Invalid User ID")
+        return await msg.reply("‼️ Iɴᴠᴀʟɪᴅ Usᴇʀ ID")
 
     await set_user(uid, {"banned": False})
 
     log_event(f"User unbanned: {uid}")
 
-    await msg.reply(f"✅ User `{uid}` unbanned successfully")
+    await msg.reply(f"✅ 𝗨𝘀𝗲𝗿 `{uid}` 𝗨𝗻𝗯𝗮𝗻𝗻𝗲𝗱 𝗦𝘂𝗰𝗰𝗲𝘀𝘀𝗳𝘂𝗹𝗹𝘆")
 # ------------LOGS------------- #
 @bot.on_message(filters.command("logs"))
 async def logs(_, msg):
@@ -1284,6 +1284,7 @@ async def cb(_, query: CallbackQuery):
         ›› 𝗛𝗼𝘄 𝗧𝗼 𝗦𝗲𝘁 𝗖𝘂𝘀𝘁𝗼𝗺 𝗠𝗲𝘁𝗮𝗱𝗮𝘁𝗮
 
         ⦿ /metadata - 𝖴𝗌𝖾 𝖳𝗁𝗂𝗌 𝖢𝗈𝗆𝗆𝖺𝗇𝖽 𝖳𝗈 𝖲𝖾𝗍 𝖢𝗎𝗌𝗍𝗈𝗆 𝖬𝖾𝗍𝖺𝖽𝖺𝖺
+        ⦿ /see_metadata - 𝖴𝗌𝖾 𝖳𝗁𝗂𝗌 𝖢𝗈𝗆𝗆𝖺𝗇𝖽 𝖳𝗈 𝖲𝖾𝖾 𝖸𝗈𝗎𝗋 𝖢𝗎𝗌𝗍𝗈𝗆 𝖬𝖾𝗍𝖺𝖽𝖺
         """
 
             await query.message.edit_text(
@@ -1314,7 +1315,7 @@ async def cb(_, query: CallbackQuery):
         📊 𝗕𝗼𝘁 𝗦𝘁𝗮𝘁𝘂𝘀
 
         👥 Usᴇʀs: {users_count}
-        ⏱ Uᴘᴛɪᴍᴇ: {get_uptime()}
+        ⏱  Uᴘᴛɪᴍᴇ: {get_uptime()}
         ⚡ Pɪɴɢ: {ping}
         🧠 Mᴇᴍᴏʀʏ Usᴀɢᴇ: {get_memory()}
         🧾 Vᴇʀsɪᴏɴ: v3.0
@@ -1345,9 +1346,9 @@ async def cb(_, query: CallbackQuery):
             selected_bot = upload_bots.get(query.from_user.id)
 
             if selected_bot:
-                selected_text = "Token Set ✅"
+                selected_text = "𝗧𝗼𝗸𝗲𝗻 𝗦𝗲𝘁 ✅"
             else:
-                selected_text = "Not Set ❌"
+                selected_text = "𝗡𝗼𝘁 𝗦𝗲𝘁 ❌"
 
             dump_id = dump_channels.get(
                 query.from_user.id,
@@ -1357,52 +1358,52 @@ async def cb(_, query: CallbackQuery):
             text = f"""
         Cʜᴏᴏsᴇ ᴡʜɪᴄʜ ʙᴏᴛ sʜᴏᴜʟᴅ ᴜᴘʟᴏᴀᴅ ᴛʜᴇ ғɪɴɪsʜᴇᴅ ғɪʟᴇ
 
-        Modes:
-        • Main: All Renamed File upload via This Bot
-        • Personal: select your personal Upload bot for uploading files
+        𝖬𝗈𝖽𝖾𝗌:
+        • 𝖬𝖺𝗂𝗇: Aʟʟ Rᴇɴᴀᴍᴇᴅ Fɪʟᴇ ᴜᴘʟᴏᴀᴅ ᴠɪᴀ Tʜɪs Bᴏᴛ
+        • 𝖯𝖾𝗋𝗌𝗈𝗇𝖺𝗅: sᴇʟᴇᴄᴛ ʏᴏᴜʀ ᴘᴇʀsᴏɴᴀʟ Uᴘʟᴏᴀᴅ ʙᴏᴛ ғᴏʀ ᴜᴘʟᴏᴀᴅɪɴɢ ғɪʟᴇs
 
-        • Current mode: {mode}
-        • Selected Upload: {selected_text}
-        • Dump channel: {dump_id}
+        • 𝖢𝗎𝗋𝗋𝖾𝗇𝗍 𝖬𝗈𝖽𝖾: {mode}
+        • 𝖲𝖾𝗅𝖾𝖼𝗍𝖾𝖽 𝖴𝗉𝗅𝗈𝖺𝖽: {selected_text}
+        • 𝖣𝗎𝗆𝗉 𝖢𝗁𝖺𝗇𝗇𝖾𝗅: {dump_id}
 
-        Checks:
-        Main mode needs main bot access if you use dump so first make the bot admin!
-        Personal mode needs both main bot and chosen upload bot as admins in your dump channel
+        𝖢𝗁𝖾𝖼𝗄𝗌:
+         Mᴀɪɴ ᴍᴏᴅᴇ ɴᴇᴇᴅs ᴍᴀɪɴ ʙᴏᴛ ᴀᴄᴄᴇss ɪғ ʏᴏᴜ ᴜsᴇ ᴅᴜᴍᴘ sᴏ ғɪʀsᴛ ᴍᴀᴋᴇ ᴛʜᴇ ʙᴏᴛ ᴀᴅᴍɪɴ!
+         Pᴇʀsᴏɴᴀʟ ᴍᴏᴅᴇ ɴᴇᴇᴅs ʙᴏᴛʜ ᴍᴀɪɴ ʙᴏᴛ ᴀɴᴅ ᴄʜᴏsᴇɴ ᴜᴘʟᴏᴀᴅ ʙᴏᴛ ᴀs ᴀᴅᴍɪɴs ɪɴ ʏᴏᴜʀ ᴅᴜᴍᴘ ᴄʜᴀɴɴᴇʟ
         """
 
             buttons = InlineKeyboardMarkup([
                 [
                     InlineKeyboardButton(
-                        "MAIN ✅",
+                        "𝗠𝗔𝗜𝗡 ✅",
                         callback_data="ub_main"
                     ),
  
                     InlineKeyboardButton(
-                        "PERSONAL",
+                        "𝗣𝗘𝗥𝗦𝗢𝗡𝗔𝗟",
                         callback_data="ub_personal"
                     )
                 ],
                 [
                     InlineKeyboardButton(
-                        "UPLOAD BOTS",
+                        "𝗨𝗣𝗟𝗢𝗔𝗗 𝗕𝗢𝗧𝗦",
                         callback_data="ub_bots"
                     )
                 ],
                  
                 [
                     InlineKeyboardButton(
-                        "ADD BOT",
+                        "𝗔𝗗𝗗 𝗕𝗢𝗧",
                         callback_data="ub_add"
                     ),
  
                     InlineKeyboardButton(
-                        "DELETE BOT",
+                        "𝗗𝗘𝗟𝗘𝗧𝗘 𝗕𝗢𝗧",
                         callback_data="ub_delete"
                     )
                 ],
                 [
                     InlineKeyboardButton(
-                        "CLOSE",
+                        "𝗖𝗟𝗢𝗦𝗘",
                         callback_data="close"
                     )
                 ]
@@ -1427,9 +1428,9 @@ async def cb(_, query: CallbackQuery):
             selected_bot = upload_bots.get(query.from_user.id)
 
             if selected_bot:
-                selected_text = "Token Set ✅"
+                selected_text = "𝗧𝗼𝗸𝗲𝗻 𝗦𝗲𝘁 ✅"
             else:
-                selected_text = "Not Set ❌"
+                selected_text = "𝗡𝗼𝘁 𝗦𝗲𝘁 ❌"
 
             dump_id = dump_channels.get(
                 query.from_user.id,
@@ -1439,51 +1440,51 @@ async def cb(_, query: CallbackQuery):
             text = f"""
         Cʜᴏᴏsᴇ ᴡʜɪᴄʜ ʙᴏᴛ sʜᴏᴜʟᴅ ᴜᴘʟᴏᴀᴅ ᴛʜᴇ ғɪɴɪsʜᴇᴅ ғɪʟᴇ
 
-        Modes:
-        • Main: All Renamed File upload via This Bot
-        • Personal: select your personal Upload bot for uploading files
+        𝖬𝗈𝖽𝖾𝗌:
+        • 𝖬𝗈𝖽𝖾𝗌: Aʟʟ Rᴇɴᴀᴍᴇᴅ Fɪʟᴇ ᴜᴘʟᴏᴀᴅ ᴠɪᴀ Tʜɪs Bᴏᴛ
+        • 𝖯𝖾𝗋𝗌𝗈𝗇𝖺𝗅: sᴇʟᴇᴄᴛ ʏᴏᴜʀ ᴘᴇʀsᴏɴᴀʟ Uᴘʟᴏᴀᴅ ʙᴏᴛ ғᴏʀ ᴜᴘʟᴏᴀᴅɪɴɢ ғɪʟᴇs
 
-        • Current mode: {mode}
-        • Selected Upload: {selected_text}
-        • Dump channel: {dump_id}
+        • 𝖢𝗎𝗋𝗋𝖾𝗇𝗍 𝖬𝗈𝖽𝖾: {mode}
+        • 𝖲𝖾𝗅𝖾𝖼𝗍𝖾𝖽 𝖴𝗉𝗅𝗈𝖺𝖽: {selected_text}
+        • 𝖣𝗎𝗆𝗉 𝖢𝗁𝖺𝗇𝗇𝖾𝗅: {dump_id}
 
-        Checks:
-        Main mode needs main bot access if you use dump so first make the bot admin!
-        Personal mode needs both main bot and chosen upload bot as admins in your dump channel
+        𝖢𝗁𝖾𝖼𝗄𝗌:
+        Mᴀɪɴ ᴍᴏᴅᴇ ɴᴇᴇᴅs ᴍᴀɪɴ ʙᴏᴛ ᴀᴄᴄᴇss ɪғ ʏᴏᴜ ᴜsᴇ ᴅᴜᴍᴘ sᴏ ғɪʀsᴛ ᴍᴀᴋᴇ ᴛʜᴇ ʙᴏᴛ ᴀᴅᴍɪɴ!
+        Pᴇʀsᴏɴᴀʟ ᴍᴏᴅᴇ ɴᴇᴇᴅs ʙᴏᴛʜ ᴍᴀɪɴ ʙᴏᴛ ᴀɴᴅ ᴄʜᴏsᴇɴ ᴜᴘʟᴏᴀᴅ ʙᴏᴛ ᴀs ᴀᴅᴍɪɴs ɪɴ ʏᴏᴜʀ ᴅᴜᴍᴘ ᴄʜᴀɴɴᴇʟ
         """
  
             buttons = InlineKeyboardMarkup([
                 [
                     InlineKeyboardButton(
-                        "MAIN",
+                        "𝗠𝗔𝗜𝗡",
                         callback_data="ub_main"
                     ),
  
                     InlineKeyboardButton(
-                        "PERSONAL ✅",
+                        "𝗣𝗘𝗥𝗦𝗢𝗡𝗔𝗟 ✅",
                         callback_data="ub_personal"
                     )
                 ],
                 [
                     InlineKeyboardButton(
-                        "UPLOAD BOTS",
+                        "𝗨𝗣𝗟𝗢𝗔𝗗 𝗕𝗢𝗧𝗦",
                         callback_data="ub_bots"
                     )
                 ],
                 [
                     InlineKeyboardButton(
-                        "ADD BOT",
+                        "𝗔𝗗𝗗 𝗕𝗢𝗧",
                         callback_data="ub_add"
                     ),
 
                     InlineKeyboardButton(
-                        "DELETE BOT",
+                        "𝗗𝗘𝗟𝗘𝗧𝗘 𝗕𝗢𝗧",
                         callback_data="ub_delete"
                     )
                 ],
                 [
                     InlineKeyboardButton(
-                        "CLOSE",
+                        "𝗖𝗟𝗢𝗦𝗘",
                         callback_data="close"
                     )
                 ]
@@ -1500,9 +1501,9 @@ async def cb(_, query: CallbackQuery):
             selected_bot = upload_bots.get(query.from_user.id)
 
             if selected_bot:
-                text = "✅ Personal Upload Bot Added"
+                text = "✅ 𝖯𝖾𝗋𝗌𝗈𝗇𝖺𝗅 𝖴𝗉𝗅𝗈𝖺𝖽 𝖡𝗈𝗍 𝖠𝖽𝖽𝖾𝖽"
             else:
-                text = "❌ No Personal Upload Bot Added"
+                text = "‼️ 𝖭𝗈 𝖯𝖾𝗋𝗌𝗈𝗇𝖺𝗅 𝖴𝗉𝗅𝗈𝖺𝖽 𝖡𝗈𝗍 𝖠𝖽𝖽𝖾𝖽"
 
             await query.answer()
 
@@ -1530,7 +1531,7 @@ async def cb(_, query: CallbackQuery):
             )
 
             await query.message.reply_text(
-                "❌ Personal Upload Bot Deleted"
+                "‼️ Pᴇʀsᴏɴᴀʟ Uᴘʟᴏᴀᴅ Bᴏᴛ Dᴇʟᴇᴛᴇᴅ"
             )
 
         elif data == "close":
@@ -1544,12 +1545,12 @@ async def cb(_, query: CallbackQuery):
 
                     buttons = InlineKeyboardMarkup([
                         [
-                            InlineKeyboardButton("📅 Today", callback_data="lb_today"),
-                            InlineKeyboardButton("📆 Weekly", callback_data="lb_weekly")
+                            InlineKeyboardButton("📅 Tᴏᴅᴀʏ", callback_data="lb_today"),
+                            InlineKeyboardButton("📆 Wᴇᴇᴋʟʏ", callback_data="lb_weekly")
                         ],
                         [
-                            InlineKeyboardButton("🗓 Monthly", callback_data="lb_monthly"),
-                            InlineKeyboardButton("🏆 All Time", callback_data="lb_alltime")
+                            InlineKeyboardButton("🗓 Mᴏɴᴛʜʟʏ", callback_data="lb_monthly"),
+                            InlineKeyboardButton("🏆 Aʟʟ Tɪᴍᴇ", callback_data="lb_alltime")
                         ]
                     ])
 
@@ -1831,13 +1832,43 @@ async def cb(_, query: CallbackQuery):
                     await query.message.edit_text(text, parse_mode=ParseMode.HTML)
                 except:
                     pass
+
+            # -------- SELECT UPLOAD CLIENT -------- #
+
+            upload_client = bot
+
+            token = upload_bots.get(user_id)
+
+            # use personal bot only if token exists
+            if token:
+
+                try:
+
+                    personal_bot = Client(
+                        name=f"upload_{user_id}",
+                        api_id=API_ID,
+                        api_hash=API_HASH,
+                        bot_token=token,
+                        in_memory=True
+                    )
+
+                    await personal_bot.start()
+
+                    upload_client = personal_bot
+
+                except Exception as e:
+
+                    print("ᴘᴇʀsᴏɴᴀʟ ʙᴏᴛ ᴇʀʀᴏʀ:", e)
+
+                    upload_client = bot
            # -------- SEND FILE -------- #
             try:
 
                # -------- VIDEO MODE -------- #
                 if mode == "video":
 
-                    await msg.reply_video(
+                    await upload_client.send_video(
+                        chat_id=msg.chat.id,
                         video=final,
                         caption=caption,
                         thumb=thumb_path,
@@ -1853,7 +1884,7 @@ async def cb(_, query: CallbackQuery):
 
                     if dump_id:
                         try:
-                            await bot.send_video(
+                            await upload_client.send_video
                                 chat_id=int(dump_id),
                                 video=final,
                                 caption=caption,
@@ -1865,12 +1896,13 @@ async def cb(_, query: CallbackQuery):
                             )
 
                         except Exception as e:
-                            print("Dump Error:", e)
+                            print("Dᴜᴍᴘ Eʀʀᴏʀ:", e)
 
                # -------- DOCUMENT MODE -------- #
                 else:
 
-                    await msg.reply_document(
+                    await upload_client.send_document(
+                        chat_id=msg.chat.id,
                         document=final,
                         file_name=new_name,
                         caption=caption,
@@ -1882,7 +1914,7 @@ async def cb(_, query: CallbackQuery):
 
                     if dump_id:
                         try:
-                            await bot.send_document(
+                            await upload_client.send_document(
                                 chat_id=int(dump_id),
                                 document=final,
                                 file_name=new_name,
@@ -1891,7 +1923,7 @@ async def cb(_, query: CallbackQuery):
                             )
 
                         except Exception as e:
-                            print("Dump Error:", e)
+                            print("Dᴜᴍᴘ Eʀʀᴏʀ:", e)
 
             except Exception as e:
 
@@ -1909,6 +1941,15 @@ async def cb(_, query: CallbackQuery):
                     pass
 
                 return
+                
+            # -------- STOP PERSONAL BOT -------- #
+
+            if token:
+
+                try:
+                    await personal_bot.stop()
+                except:
+                    pass
 
 
             # -------- CLEANUP -------- #
@@ -2011,12 +2052,12 @@ async def leaderboard(_, msg):
 
     buttons = InlineKeyboardMarkup([
         [
-            InlineKeyboardButton("📅 Today", callback_data="lb_today"),
-            InlineKeyboardButton("📆 Weekly", callback_data="lb_weekly")
+            InlineKeyboardButton("📅 Tᴏᴅᴀʏ", callback_data="lb_today"),
+            InlineKeyboardButton("📆 Wᴇᴇᴋʟʏ", callback_data="lb_weekly")
         ],
         [
-            InlineKeyboardButton("🗓 Monthly", callback_data="lb_monthly"),
-            InlineKeyboardButton("🏆 All Time", callback_data="lb_alltime")
+            InlineKeyboardButton("🗓 Mᴏɴᴛʜʟʏ", callback_data="lb_monthly"),
+            InlineKeyboardButton("🏆 Aʟʟ Tɪᴍᴇ", callback_data="lb_alltime")
         ]
     ])
 
@@ -2142,7 +2183,15 @@ async def chatid(_, msg):
 # ---------------- RUN ----------------
 keep_alive()
 
-print("BOT STARTED 🚀")
+print("""
+
+╭──────────────────────╮
+│  ᴍᴅ-ᴅᴇᴠᴇʟᴏᴘᴇʀ-ʏᴛ          │
+│  ʀᴇɴᴀᴍᴇ ʙᴏᴛ 2ɢʙ          │
+╰──────────────────────╯
+
+""")
+
 bot.run()
 
 # ------------------------- #
