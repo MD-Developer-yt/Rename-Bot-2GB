@@ -802,6 +802,121 @@ async def del_dump(_, msg):
 
     await msg.reply("✅ Dump Channel Deleted")
 
+# ---------------- UPLOAD SYSTEM ---------------- #
+
+upload_modes = {}
+upload_bots = {}
+
+@bot.on_message(filters.command("ub"))
+async def upload_settings(_, msg):
+
+    user_id = msg.from_user.id
+
+    mode = upload_modes.get(user_id, "main").upper()
+
+    selected_bot = upload_bots.get(user_id)
+
+    if selected_bot:
+        selected_text = "Token Set ✅"
+    else:
+        selected_text = "Not Set ❌"
+
+    dump_id = dump_channels.get(user_id, "Not set")
+
+    text = f"""
+Cʜᴏᴏsᴇ ᴡʜɪᴄʜ ʙᴏᴛ sʜᴏᴜʟᴅ ᴜᴘʟᴏᴀᴅ ᴛʜᴇ ғɪɴɪsʜᴇᴅ ғɪʟᴇ
+
+Modes:
+• Main: All Renamed File upload via This Bot
+• Personal: select your personal Upload bot for uploading files
+
+• Current mode: {mode}
+• Selected Upload: {selected_text}
+• Dump channel: {dump_id}
+
+Checks:
+Main mode needs main bot access if you use dump so first make the bot admin!
+Personal mode needs both main bot and chosen upload bot as admins in your dump channel
+"""
+
+    buttons = InlineKeyboardMarkup([
+        [
+            InlineKeyboardButton(
+                f"MAIN {'✅' if mode == 'MAIN' else ''}",
+                callback_data="ub_main"
+            ),
+
+            InlineKeyboardButton(
+                f"PERSONAL {'✅' if mode == 'PERSONAL' else ''}",
+                callback_data="ub_personal"
+            )
+        ],
+        [
+            InlineKeyboardButton(
+                "UPLOAD BOTS",
+                callback_data="ub_bots"
+            )
+        ],
+        [
+            InlineKeyboardButton(
+                "ADD BOT",
+                callback_data="ub_add"
+            ),
+
+            InlineKeyboardButton(
+                "DELETE BOT",
+                callback_data="ub_delete"
+            )
+        ],
+        [
+            InlineKeyboardButton(
+                "CLOSE",
+                callback_data="close"
+            )
+        ]
+    ])
+
+    await msg.reply_text(
+        text,
+        reply_markup=buttons
+    )
+
+
+# ---------------- ADD PERSONAL BOT ---------------- #
+
+@bot.on_message(filters.command("addbot"))
+async def add_bot(_, msg):
+
+    user_id = msg.from_user.id
+
+    if len(msg.command) < 2:
+        return await msg.reply(
+            "Usage:\n/addbot BOT_TOKEN"
+        )
+
+    token = msg.command[1]
+
+    upload_bots[user_id] = token
+
+    await msg.reply(
+        "✅ Personal Upload Bot Saved"
+    )
+
+
+# ---------------- DELETE BOT ---------------- #
+
+@bot.on_message(filters.command("delbot"))
+async def del_bot(_, msg):
+
+    user_id = msg.from_user.id
+
+    if user_id in upload_bots:
+        del upload_bots[user_id]
+
+    await msg.reply(
+        "❌ Personal Upload Bot Deleted"
+    )
+
 # ---------------- THUMB ----------------
 @bot.on_message(filters.photo)
 async def save_thumb(_, msg):
@@ -1140,6 +1255,209 @@ async def cb(_, query: CallbackQuery):
 
         elif data == "owner":
             await query.message.edit_text(f"👑 Owner ID: {OWNER_ID}")
+
+        # ---------------- UPLOAD MODE CALLBACKS ---------------- #
+
+        elif data == "ub_main":
+
+            upload_modes[query.from_user.id] = "main"
+
+            await query.answer(
+                "Main Upload Mode Enabled"
+            )
+
+            mode = "MAIN"
+
+            selected_bot = upload_bots.get(query.from_user.id)
+
+            if selected_bot:
+                selected_text = "Token Set ✅"
+            else:
+                selected_text = "Not Set ❌"
+
+            dump_id = dump_channels.get(
+                query.from_user.id,
+                "Not set"
+            )
+
+            text = f"""
+        Cʜᴏᴏsᴇ ᴡʜɪᴄʜ ʙᴏᴛ sʜᴏᴜʟᴅ ᴜᴘʟᴏᴀᴅ ᴛʜᴇ ғɪɴɪsʜᴇᴅ ғɪʟᴇ
+
+        Modes:
+        • Main: All Renamed File upload via This Bot
+        • Personal: select your personal Upload bot for uploading files
+
+        • Current mode: {mode}
+        • Selected Upload: {selected_text}
+        • Dump channel: {dump_id}
+
+        Checks:
+        Main mode needs main bot access if you use dump so first make the bot admin!
+        Personal mode needs both main bot and chosen upload bot as admins in your dump channel
+        """
+
+            buttons = InlineKeyboardMarkup([
+                [
+                    InlineKeyboardButton(
+                        "MAIN ✅",
+                        callback_data="ub_main"
+                    ),
+ 
+                    InlineKeyboardButton(
+                        "PERSONAL",
+                        callback_data="ub_personal"
+                    )
+                ],
+                [
+                    InlineKeyboardButton(
+                        "UPLOAD BOTS",
+                        callback_data="ub_bots"
+                    )
+                ],
+                 
+                [
+                    InlineKeyboardButton(
+                        "ADD BOT",
+                        callback_data="ub_add"
+                    ),
+ 
+                    InlineKeyboardButton(
+                        "DELETE BOT",
+                        callback_data="ub_delete"
+                    )
+                ],
+                [
+                    InlineKeyboardButton(
+                        "CLOSE",
+                        callback_data="close"
+                    )
+                ]
+            ])
+
+            await query.message.edit_text(
+                text,
+                reply_markup=buttons
+            )
+
+
+        elif data == "ub_personal":
+
+            upload_modes[query.from_user.id] = "personal"
+
+            await query.answer(
+                "Personal Upload Mode Enabled"
+            )
+
+            mode = "PERSONAL"
+   
+            selected_bot = upload_bots.get(query.from_user.id)
+
+            if selected_bot:
+                selected_text = "Token Set ✅"
+            else:
+                selected_text = "Not Set ❌"
+
+            dump_id = dump_channels.get(
+                query.from_user.id,
+                "Not set"
+            )
+ 
+            text = f"""
+        Cʜᴏᴏsᴇ ᴡʜɪᴄʜ ʙᴏᴛ sʜᴏᴜʟᴅ ᴜᴘʟᴏᴀᴅ ᴛʜᴇ ғɪɴɪsʜᴇᴅ ғɪʟᴇ
+
+        Modes:
+        • Main: All Renamed File upload via This Bot
+        • Personal: select your personal Upload bot for uploading files
+
+        • Current mode: {mode}
+        • Selected Upload: {selected_text}
+        • Dump channel: {dump_id}
+
+        Checks:
+        Main mode needs main bot access if you use dump so first make the bot admin!
+        Personal mode needs both main bot and chosen upload bot as admins in your dump channel
+        """
+ 
+            buttons = InlineKeyboardMarkup([
+                [
+                    InlineKeyboardButton(
+                        "MAIN",
+                        callback_data="ub_main"
+                    ),
+ 
+                    InlineKeyboardButton(
+                        "PERSONAL ✅",
+                        callback_data="ub_personal"
+                    )
+                ],
+                [
+                    InlineKeyboardButton(
+                        "UPLOAD BOTS",
+                        callback_data="ub_bots"
+                    )
+                ],
+                [
+                    InlineKeyboardButton(
+                        "ADD BOT",
+                        callback_data="ub_add"
+                    ),
+
+                    InlineKeyboardButton(
+                        "DELETE BOT",
+                        callback_data="ub_delete"
+                    )
+                ],
+                [
+                    InlineKeyboardButton(
+                        "CLOSE",
+                        callback_data="close"
+                    )
+                ]
+            ])
+
+            await query.message.edit_text(
+                text,
+                reply_markup=buttons
+            )
+
+
+        elif data == "ub_bots":
+
+            selected_bot = upload_bots.get(query.from_user.id)
+
+            if selected_bot:
+                text = "✅ Personal Upload Bot Added"
+            else:
+                text = "❌ No Personal Upload Bot Added"
+
+            await query.answer()
+
+            await query.message.reply_text(text)
+
+
+        elif data == "ub_add":
+
+            await query.answer()
+
+            await query.message.reply_text(
+                "Send:\n/addbot BOT_TOKEN"
+            )
+
+
+        elif data == "ub_delete":
+
+            user_id = query.from_user.id
+
+            if user_id in upload_bots:
+                del upload_bots[user_id]
+
+            await query.answer(
+                "Personal Upload Bot Deleted"
+            )
+
+            await query.message.reply_text(
+                "❌ Personal Upload Bot Deleted"
+            )
 
         elif data == "close":
             await query.message.delete()
