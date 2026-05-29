@@ -1013,12 +1013,57 @@ async def status(_, msg):
 
     await msg.reply_text(text, reply_markup=buttons)
 
-# ----------- STATS COMMAND ------------#
+# -------- STATS DATABASE -------- #
 
-rename_stats = {
-    "total_files": 0,
-    "total_size": 0
-}
+async def get_stats():
+
+    data = await db.stats.find_one({"_id": "main"})
+
+    if not data:
+
+        data = {
+            "_id": "main",
+            "total_files": 0,
+            "total_size": 0
+        }
+
+        await db.stats.insert_one(data)
+
+    return data
+
+
+async def update_stats(file_size):
+
+    await db.stats.update_one(
+        {"_id": "main"},
+        {
+            "$inc": {
+                "total_files": 1,
+                "total_size": file_size
+            }
+        },
+        upsert=True
+    )
+
+
+# -------- LEADERBOARD DATABASE -------- #
+
+async def update_leaderboard(user_id):
+
+    await db.leaderboard.update_one(
+        {"user_id": user_id},
+        {
+            "$inc": {
+                "today": 1,
+                "weekly": 1,
+                "monthly": 1,
+                "alltime": 1
+            }
+        },
+        upsert=True
+    )
+
+# ----------- STATS COMMAND ------------#
 
 def progress_bar_string(percent):
     filled = int(percent // 10)
@@ -1058,8 +1103,10 @@ async def stats(_, msg):
     disk_percent = disk.percent
     disk_bar = progress_bar_string(disk_percent)
 
-    total_files = rename_stats["total_files"]
-    total_storage = humanbytes(rename_stats["total_size"])
+    stats_data = await get_stats()
+
+    total_files = stats_data["total_files"]
+    total_storage = humanbytes(stats_data["total_size"])
 
     text = f"""
 ⌬ 𝗕𝗢𝗧 𝗦𝗧𝗔𝗧𝗜𝗦𝗧𝗜𝗖𝗦 :
@@ -1198,6 +1245,11 @@ async def broadcast(_, msg):
 @bot.on_callback_query()
 async def cb(_, query: CallbackQuery):
 
+    try:
+        await query.answer()
+    except:
+        pass
+        
     data = query.data
 
     try:
@@ -1300,14 +1352,7 @@ async def cb(_, query: CallbackQuery):
             if query.from_user.id != OWNER_ID:
                 return await query.answer("❌ 𝗬𝗼𝘂 𝗮𝗿𝗲 𝗻𝗼𝘁 𝗮𝘂𝘁𝗵𝗼𝗿𝗶𝘇𝗲𝗱 𝘁𝗼 𝘂𝘀𝗲 𝘁𝗵𝗶𝘀 𝗰𝗼𝗺𝗺𝗮𝗻𝗱", show_alert=True)
 
-            await query.answer()
-
             users_count = await users.count_documents({})
-
-            if not await get_premium_status(query.from_user.id):
-                premium = "No"
-            else:
-                premium = "Yes"
 
             ping = await get_ping()
 
@@ -1607,18 +1652,18 @@ async def cb(_, query: CallbackQuery):
 
             async def dprog(current, total):
 
-                global download_last_edit
+                nonlocal last_edit
 
-                if not active_tasks.get(user_id):
-                    raise Exception("Cancelled")
+            if not active_tasks.get(user_id):
+                raise Exception("Cancelled")
 
-                now = time.time()
+            now = time.time()
 
-                # 🔥 prevent too frequent edits
-                if now - download_last_edit < 1:
-                    return
-                download_last_edit = now
+            # prevent too frequent edits
+            if now - last_edit < 1:
+                return
 
+            last_edit = now
                 percent, speed, eta = calc_progress(current, total, start_time)
 
                 filled = int(percent / 10)
@@ -1743,7 +1788,7 @@ async def cb(_, query: CallbackQuery):
                     new_name = f"{caption}{ext}"
                 else:
                     new_name = f"{prefix}{base_name}{suffix}{ext}"
-            output = f"temp_{user_id}_{new_name}"
+            output = f"temp_{user_id}_{safe_name(new_name)}"
 
             if any([
                 user.get("title"),
@@ -1801,17 +1846,18 @@ async def cb(_, query: CallbackQuery):
 
             async def prog(current, total):
 
-                global upload_last_edit
+                nonlocal last_edit
 
-                if not active_tasks.get(user_id):
-                    raise Exception("Cancelled")
+            if not active_tasks.get(user_id):
+                raise Exception("Cancelled")
 
-                now = time.time()
+            now = time.time()
+     
+           # prevent spam edits
+           if now - last_edit < 1:
+               return
 
-                # 🔥 prevent spam edits
-                if now - upload_last_edit < 1:
-                    return
-                upload_last_edit = now
+           last_edit = now
 
                 percent, speed, eta = calc_progress(current, total, start_time)
 
@@ -1837,10 +1883,12 @@ async def cb(_, query: CallbackQuery):
 
             upload_client = bot
 
+            mode_selected = upload_modes.get(user_id, "main")
+
             token = upload_bots.get(user_id)
 
-            # use personal bot only if token exists
-            if token:
+            # use personal bot ONLY in personal mode
+            if mode_selected == "personal" and token:
 
                 try:
 
@@ -1850,16 +1898,16 @@ async def cb(_, query: CallbackQuery):
                         api_hash=API_HASH,
                         bot_token=token,
                         in_memory=True
-                    )
+                   )
 
-                    await personal_bot.start()
+                   await personal_bot.start()
 
-                    upload_client = personal_bot
-
+                   upload_client = personal_bot
+ 
                 except Exception as e:
 
                     print("ᴘᴇʀsᴏɴᴀʟ ʙᴏᴛ ᴇʀʀᴏʀ:", e)
-
+   
                     upload_client = bot
            # -------- SEND FILE -------- #
             try:
@@ -1884,7 +1932,7 @@ async def cb(_, query: CallbackQuery):
 
                     if dump_id:
                         try:
-                            await upload_client.send_video
+                            await upload_client.send_video(
                                 chat_id=int(dump_id),
                                 video=final,
                                 caption=caption,
@@ -1927,16 +1975,10 @@ async def cb(_, query: CallbackQuery):
 
             except Exception as e:
 
-                await query.message.edit_text(
-                    f"❌ Uᴘʟᴏᴀᴅ Cᴀɴᴄᴇʟʟᴇᴅ\n\n{str(e)}"
-                )
-                return
-
                 try:
                     await query.message.edit_text(
-                        "Eʀʀᴏʀ ‼️, Cᴏɴᴛᴀᴄᴛ ᴅᴇᴠᴇʟᴏᴘᴇʀ @Mr_Mohammed_29"
+                       f"❌ Uᴘʟᴏᴀᴅ Cᴀɴᴄᴇʟʟᴇᴅ\n\n{str(e)}"
                     )
-
                 except:
                     pass
 
@@ -1975,17 +2017,11 @@ async def cb(_, query: CallbackQuery):
             except Exception:
                 pass
 
-            # -------- UPDATE LEADERBOARD -------- #
-
-            leaderboard_data["today"][user_id] += 1
-            leaderboard_data["weekly"][user_id] += 1
-            leaderboard_data["monthly"][user_id] += 1
-            leaderboard_data["alltime"][user_id] += 1
-
             # -------- STATS COUNTER -------- #
 
-            rename_stats["total_files"] += 1
-            rename_stats["total_size"] += file_size
+            await update_stats(file_size)
+
+            user_files.pop(user_id, None)
 
             await query.message.delete()
             active_tasks.pop(user_id, None)
@@ -1998,43 +2034,27 @@ async def cb(_, query: CallbackQuery):
 
         print("Callback Error:", e)
 
-# ---------------- LEADERBOARD DATA ---------------- #
-
-from collections import defaultdict
-
-leaderboard_data = {
-    "today": defaultdict(int),
-    "weekly": defaultdict(int),
-    "monthly": defaultdict(int),
-    "alltime": defaultdict(int)
-}
-
 # ---------------- LEADERBOARD FUNCTION ---------------- #
 
 async def generate_leaderboard(period):
 
-    data = leaderboard_data.get(period, {})
-
-    sorted_users = sorted(
-        data.items(),
-        key=lambda x: x[1],
-        reverse=True
-    )[:20]
-
-    total_files = sum(data.values())
+    users_data = db.leaderboard.find().sort(period, -1).limit(20)
 
     text = f"📈 Lᴇᴀᴅᴇʀʙᴏᴀʀᴅ: {period.upper()}\n\n"
-    text += "Tᴏᴘ 𝟸𝟶 Usᴇʀs Wɪᴛʜ Mᴏsᴛ Fɪʟᴇs Sᴏʀᴛᴇᴅ:\n\n"
+    text += "Tᴏᴘ 20 Usᴇʀs:\n\n"
 
-    for uid, count in sorted_users:
+    total_files = 0
+
+    async for data in users_data:
+
+        uid = data["user_id"]
+        count = data.get(period, 0)
+
+        total_files += count
 
         try:
             user = await bot.get_users(uid)
-
-            name = user.first_name
-
-            if len(name) > 25:
-                name = name[:25]
+            name = user.first_name[:25]
 
         except:
             name = "Unknown"
