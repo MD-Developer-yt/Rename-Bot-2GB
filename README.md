@@ -1,9 +1,6 @@
----
+
 [![Typing SVG](https://readme-typing-svg.demolab.com?font=Fira+Code&pause=1000&color=36BCF7F1&width=435&lines=Welcome+To+Rename+Bot+2GB;It+is+Advance+Rename+Bot+2GB;Bot+is+Made+By+Mohammed)](https://git.io/typing-svg)
 
----
-
----
 
 <p align="center">
   <a href="https://www.python.org/" target="_blank">
