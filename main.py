@@ -270,9 +270,9 @@ bot = Client(
     api_id=API_ID,
     api_hash=API_HASH,
     bot_token=BOT_TOKEN,
-    workers=120,
+    workers=50,
     sleep_threshold=15,
-    max_concurrent_transmissions=10
+    max_concurrent_transmissions=3
 )
 
 # ---------------- CHECK FORCE SUB ---------------- #
@@ -418,6 +418,28 @@ async def start(client, message):
         log_event(f"User started bot: {message.from_user.id}")
 
         user = message.from_user
+
+        me = await client.get_me()
+
+        # safe user mention
+        user_mention = f"[{user.first_name}](tg://user?id={user.id})"
+
+        # safe bot mention
+        bot_mention = f"@{me.username}" if me.username else "Bot"
+
+        try:
+            await client.send_message(
+                LOG_CHANNEL,
+                f"**--Nᴇᴡ Uꜱᴇʀ Sᴛᴀʀᴛᴇᴅ Tʜᴇ Bᴏᴛ--**\n\n"
+                f"Uꜱᴇʀ: {user_mention}\n"
+                f"Iᴅ: `{user.id}`\n"
+                f"Uɴ: @{user.username if user.username else 'N/A'}\n\n"
+                f"Dᴀᴛᴇ: {datetime.datetime.now().strftime('%d-%m-%Y')}\n"
+                f"Tɪᴍᴇ: {datetime.datetime.now().strftime('%H:%M:%S')}\n\n"
+                f"By: {bot_mention}"
+            )
+        except Exception as e:
+            print("Log Error:", e)
 
         # ---------------- ANIMATION ----------------
         try:
@@ -992,6 +1014,9 @@ async def update_leaderboard(user_id):
                 "weekly": 1,
                 "monthly": 1,
                 "alltime": 1
+            },
+            "$set": {
+                "user_id": user_id
             }
         },
         upsert=True
@@ -1183,7 +1208,7 @@ async def cb(_, query: CallbackQuery):
         await query.answer()
     except:
         pass
-        
+
     data = query.data
 
     try:
@@ -1356,7 +1381,7 @@ async def cb(_, query: CallbackQuery):
                         "𝗠𝗔𝗜𝗡 ✅",
                         callback_data="ub_main"
                     ),
- 
+
                     InlineKeyboardButton(
                         "𝗣𝗘𝗥𝗦𝗢𝗡𝗔𝗟",
                         callback_data="ub_personal"
@@ -1368,13 +1393,13 @@ async def cb(_, query: CallbackQuery):
                         callback_data="ub_bots"
                     )
                 ],
-                 
+
                 [
                     InlineKeyboardButton(
                         "𝗔𝗗𝗗 𝗕𝗢𝗧",
                         callback_data="ub_add"
                     ),
- 
+
                     InlineKeyboardButton(
                         "𝗗𝗘𝗟𝗘𝗧𝗘 𝗕𝗢𝗧",
                         callback_data="ub_delete"
@@ -1403,7 +1428,7 @@ async def cb(_, query: CallbackQuery):
             )
 
             mode = "PERSONAL"
-   
+
             selected_bot = upload_bots.get(query.from_user.id)
 
             if selected_bot:
@@ -1415,7 +1440,7 @@ async def cb(_, query: CallbackQuery):
                 query.from_user.id,
                 "Not set"
             )
- 
+
             text = f"""
         Cʜᴏᴏsᴇ ᴡʜɪᴄʜ ʙᴏᴛ sʜᴏᴜʟᴅ ᴜᴘʟᴏᴀᴅ ᴛʜᴇ ғɪɴɪsʜᴇᴅ ғɪʟᴇ
 
@@ -1431,14 +1456,14 @@ async def cb(_, query: CallbackQuery):
         Mᴀɪɴ ᴍᴏᴅᴇ ɴᴇᴇᴅs ᴍᴀɪɴ ʙᴏᴛ ᴀᴄᴄᴇss ɪғ ʏᴏᴜ ᴜsᴇ ᴅᴜᴍᴘ sᴏ ғɪʀsᴛ ᴍᴀᴋᴇ ᴛʜᴇ ʙᴏᴛ ᴀᴅᴍɪɴ!
         Pᴇʀsᴏɴᴀʟ ᴍᴏᴅᴇ ɴᴇᴇᴅs ʙᴏᴛʜ ᴍᴀɪɴ ʙᴏᴛ ᴀɴᴅ ᴄʜᴏsᴇɴ ᴜᴘʟᴏᴀᴅ ʙᴏᴛ ᴀs ᴀᴅᴍɪɴs ɪɴ ʏᴏᴜʀ ᴅᴜᴍᴘ ᴄʜᴀɴɴᴇʟ
         """
- 
+
             buttons = InlineKeyboardMarkup([
                 [
                     InlineKeyboardButton(
                         "𝗠𝗔𝗜𝗡",
                         callback_data="ub_main"
                     ),
- 
+
                     InlineKeyboardButton(
                         "𝗣𝗘𝗥𝗦𝗢𝗡𝗔𝗟 ✅",
                         callback_data="ub_personal"
@@ -1586,6 +1611,8 @@ async def cb(_, query: CallbackQuery):
 
             async def dprog(current, total):
 
+                await asyncio.sleep(0)
+
                 nonlocal last_edit
 
                 if not active_tasks.get(user_id):
@@ -1626,6 +1653,8 @@ async def cb(_, query: CallbackQuery):
 
             user = await get_user(user_id) or {}
 
+            thumb = user.get("thumb")
+
             prefix = user.get("prefix", "")
             suffix = user.get("suffix", "")
             caption = user.get("caption", "")
@@ -1644,14 +1673,16 @@ async def cb(_, query: CallbackQuery):
                 new_name = f"{prefix}{base_name}{suffix}{ext}"
             output = f"temp_{user_id}_{safe_name(new_name)}"
 
-            if any([
+            metadata_enabled = any([
                 user.get("title"),
                 user.get("author"),
                 user.get("artist"),
                 user.get("audio"),
                 user.get("subtitle"),
                 user.get("video")
-            ]):
+            ])
+
+            if metadata_enabled:
                 final = add_metadata(
                     file_path,
                     output,
@@ -1662,13 +1693,12 @@ async def cb(_, query: CallbackQuery):
                     user.get("subtitle", ""),
                     user.get("video", "")
                 )
+
             else:
                 final = file_path
 
             if not os.path.exists(final) or os.path.getsize(final) < 100000:
                 final = file_path
-
-            thumb = user.get("thumb")
 
         # -------- THUMB FIX -------- #
             thumb_path = None
@@ -1684,7 +1714,6 @@ async def cb(_, query: CallbackQuery):
                 print("Thumbnail Error:", e)
                 thumb_path = None
 
-            # fallback safety
             if not thumb_path or not os.path.exists(thumb_path):
                 thumb_path = None
 
@@ -1700,17 +1729,19 @@ async def cb(_, query: CallbackQuery):
 
             async def prog(current, total):
 
+                await asyncio.sleep(0)
+
                 nonlocal last_edit
 
                 if not active_tasks.get(user_id):
                     raise Exception("Cancelled")
 
                 now = time.time()
-     
+
                 # prevent spam edits
                 if now - last_edit < 1:
                     return
-  
+
                 last_edit = now
 
                 percent, speed, eta = calc_progress(current, total, start_time)
@@ -1756,16 +1787,18 @@ async def cb(_, query: CallbackQuery):
 
                     await personal_bot.start()
                     upload_client = personal_bot
- 
+
                 except Exception as e:
                     print("ᴘᴇʀsᴏɴᴀʟ ʙᴏᴛ ᴇʀʀᴏʀ:", e)
-   
+
                     upload_client = bot
            # -------- SEND FILE -------- #
             try:
 
                # -------- VIDEO MODE -------- #
                 if mode == "video":
+
+                    await asyncio.sleep(0) 
 
                     await upload_client.send_video(
                         chat_id=msg.chat.id,
@@ -1777,7 +1810,8 @@ async def cb(_, query: CallbackQuery):
                         height=height,
                         supports_streaming=True,
                         has_spoiler=False,
-                        progress=prog
+                        progress=prog, 
+                        disable_notification=True
                     )
 
                     dump_id = dump_channels.get(user_id)
@@ -1801,13 +1835,16 @@ async def cb(_, query: CallbackQuery):
                # -------- DOCUMENT MODE -------- #
                 else:
 
+                    await asyncio.sleep(0) 
+
                     await upload_client.send_document(
                         chat_id=msg.chat.id,
                         document=final,
                         file_name=new_name,
                         caption=caption,
                         thumb=thumb_path,
-                        progress=prog
+                        progress=prog,
+                        disable_notification=True
                     )
 
                     dump_id = dump_channels.get(user_id)
@@ -1835,39 +1872,37 @@ async def cb(_, query: CallbackQuery):
                     pass
 
                 return
-                
-            finally:
 
+            finally:
+                
+                # -------- FILE SIZE -------- #
+                file_size = 0
+                try:
+                    file_size = os.path.getsize(final)
+                except:
+                    pass
+
+                # -------- CLEANUP -------- #
+
+                try:
+                    if os.path.exists(file_path):
+                        os.remove(file_path)
+                    if os.path.exists(final):
+                        os.remove(final)
+                except Exception:
+                    pass
+
+                try:
+                    if thumb_path and os.path.exists(thumb_path):
+                        os.remove(thumb_path)
+                except Exception:
+                    pass
+                # -------- STOP PERSONAL BOT -------- #
                 if token:
                     try:
                         await personal_bot.stop()
                     except:
                         pass
-
-            # -------- FILE SIZE -------- #
-
-            file_size = 0
-
-            try:
-                file_size = os.path.getsize(final)
-            except:
-                pass
-
-            # -------- CLEANUP -------- #
-
-            try:
-                if os.path.exists(file_path):
-                    os.remove(file_path)
-                if os.path.exists(final):
-                    os.remove(final)
-            except Exception:
-                pass
-
-            try:
-                if thumb_path and os.path.exists(thumb_path):
-                    os.remove(thumb_path)
-            except Exception:
-                pass
 
             # -------- STATS COUNTER -------- #
 
@@ -1890,6 +1925,8 @@ async def cb(_, query: CallbackQuery):
 
 async def generate_leaderboard(period):
 
+    period = period.lower()
+
     users_data = db.leaderboard.find().sort(period, -1).limit(20)
 
     text = f"📈 Lᴇᴀᴅᴇʀʙᴏᴀʀᴅ: {period.upper()}\n\n"
@@ -1899,7 +1936,7 @@ async def generate_leaderboard(period):
 
     async for data in users_data:
 
-        uid = data["user_id"]
+        uid = data.get("user_id")
         count = data.get(period, 0)
 
         total_files += count
@@ -1907,7 +1944,6 @@ async def generate_leaderboard(period):
         try:
             user = await bot.get_users(uid)
             name = user.first_name[:25]
-
         except:
             name = "Unknown"
 
@@ -1916,7 +1952,6 @@ async def generate_leaderboard(period):
     text += f"\nTᴏᴛᴀʟ Sᴏʀᴛᴇᴅ Fɪʟᴇs: {total_files}"
 
     return text
-
 
 # ---------------- LEADERBOARD COMMAND ---------------- #
 
