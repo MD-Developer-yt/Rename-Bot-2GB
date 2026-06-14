@@ -270,9 +270,9 @@ bot = Client(
     api_id=API_ID,
     api_hash=API_HASH,
     bot_token=BOT_TOKEN,
-    workers=50,
+    workers=40,
     sleep_threshold=15,
-    max_concurrent_transmissions=3
+    max_concurrent_transmissions=7
 )
 
 # ---------------- CHECK FORCE SUB ---------------- #
@@ -419,12 +419,12 @@ async def start(client, message):
 
         user = message.from_user
 
+        if not user:
+            return
+
         me = await client.get_me()
 
-        # safe user mention
         user_mention = f"[{user.first_name}](tg://user?id={user.id})"
-
-        # safe bot mention
         bot_mention = f"@{me.username}" if me.username else "Bot"
 
         try:
@@ -438,9 +438,9 @@ async def start(client, message):
                 f"Tɪᴍᴇ: {datetime.datetime.now().strftime('%H:%M:%S')}\n\n"
                 f"By: {bot_mention}"
             )
+
         except Exception as e:
             print("Log Error:", e)
-
         # ---------------- ANIMATION ----------------
         try:
             m = await message.reply_text("Sʜᴀᴅᴏᴡ Oғ Mᴏɴᴀʀᴄʜ. . .")
@@ -947,11 +947,6 @@ async def status(_, msg):
         return 
 
     users_count = await users.count_documents({})
-
-    if not await get_premium_status(msg.from_user.id):
-        premium = "No"
-    else:
-        premium = "Yes"
 
     ping = await get_ping()
 
@@ -1542,26 +1537,28 @@ async def cb(_, query: CallbackQuery):
             await query.message.delete()
 
         elif data.startswith("lb_"):
+ 
+            await query.answer()  
 
-                    period = data.split("_")[1]
+            period = data.split("_")[1]
 
-                    text = await generate_leaderboard(period)
+            text = await generate_leaderboard(period)
 
-                    buttons = InlineKeyboardMarkup([
-                        [
-                            InlineKeyboardButton("📅 Tᴏᴅᴀʏ", callback_data="lb_today"),
-                            InlineKeyboardButton("📆 Wᴇᴇᴋʟʏ", callback_data="lb_weekly")
-                        ],
-                        [
-                            InlineKeyboardButton("🗓 Mᴏɴᴛʜʟʏ", callback_data="lb_monthly"),
-                            InlineKeyboardButton("🏆 Aʟʟ Tɪᴍᴇ", callback_data="lb_alltime")
-                        ]
-                    ])
+            buttons = InlineKeyboardMarkup([
+                [
+                    InlineKeyboardButton("📅 Tᴏᴅᴀʏ", callback_data="lb_today"),
+                    InlineKeyboardButton("📆 Wᴇᴇᴋʟʏ", callback_data="lb_weekly")
+                ],
+                [
+                    InlineKeyboardButton("🗓 Mᴏɴᴛʜʟʏ", callback_data="lb_monthly"),
+                    InlineKeyboardButton("🏆 Aʟʟ Tɪᴍᴇ", callback_data="lb_alltime")
+                ]
+            ])
 
-                    await query.message.edit_text(
-                        text,
-                        reply_markup=buttons
-                    )  
+            await query.message.edit_text(
+                text,
+                reply_markup=buttons
+            )
 
         elif data.startswith("cancel_"):
 
@@ -1621,7 +1618,7 @@ async def cb(_, query: CallbackQuery):
                 now = time.time()
 
                 # prevent too frequent edits
-                if now - last_edit < 1:
+                if now - last_edit < 2:
                     return
 
                 last_edit = now
@@ -1661,17 +1658,15 @@ async def cb(_, query: CallbackQuery):
 
             original_name = file.file_name if hasattr(file, "file_name") else "video.mp4"
 
-            original_name = safe_name(original_name)
-
-            base_name, ext = os.path.splitext(original_name)
-
             # -------- NORMAL RENAME -------- #
 
-            if caption:
-                new_name = f"{caption}{ext}"
-            else:
-                new_name = f"{prefix}{base_name}{suffix}{ext}"
-            output = f"temp_{user_id}_{safe_name(new_name)}"
+            final_name = caption if caption else file.file_name
+
+            base_name, ext = os.path.splitext(file.file_name)
+
+            new_name = final_name + ext
+
+            output = f"temp_{user_id}_{new_name}"
 
             metadata_enabled = any([
                 user.get("title"),
@@ -1739,7 +1734,7 @@ async def cb(_, query: CallbackQuery):
                 now = time.time()
 
                 # prevent spam edits
-                if now - last_edit < 1:
+                if now - last_edit < 2:
                     return
 
                 last_edit = now
@@ -1813,6 +1808,8 @@ async def cb(_, query: CallbackQuery):
                         progress=prog, 
                         disable_notification=True
                     )
+                    
+                    await update_leaderboard(user_id)
 
                     dump_id = dump_channels.get(user_id)
 
@@ -1841,11 +1838,13 @@ async def cb(_, query: CallbackQuery):
                         chat_id=msg.chat.id,
                         document=final,
                         file_name=new_name,
-                        caption=caption,
+                        caption=final_name,
                         thumb=thumb_path,
                         progress=prog,
                         disable_notification=True
                     )
+                    
+                    await update_leaderboard(user_id)
 
                     dump_id = dump_channels.get(user_id)
 
@@ -1927,14 +1926,14 @@ async def generate_leaderboard(period):
 
     period = period.lower()
 
-    users_data = db.leaderboard.find().sort(period, -1).limit(20)
+    cursor = db.leaderboard.find({period: {"$exists": True}}).sort(period, -1).limit(20)
 
     text = f"📈 Lᴇᴀᴅᴇʀʙᴏᴀʀᴅ: {period.upper()}\n\n"
     text += "Tᴏᴘ 20 Usᴇʀs:\n\n"
 
     total_files = 0
 
-    async for data in users_data:
+    async for data in cursor:
 
         uid = data.get("user_id")
         count = data.get(period, 0)
